@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Request Form with LLM</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        #suggestion,
+        #apiKeyInput {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+
+        #loading {
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Interactive Request Form with LLM</h1>
+    <form id="requestForm">
+        <textarea id="requestText" placeholder="Enter your request here..."></textarea>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="loading">Processing your request...</div>
+    <div id="suggestion" style="display: none;"></div>
+
+    <script>
+        const form = document.getElementById('requestForm');
+        const textarea = document.getElementById('requestText');
+        const suggestionDiv = document.getElementById('suggestion');
+        const loadingDiv = document.getElementById('loading');
+        const converter = new showdown.Converter();
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            processRequest(textarea.value);
+        });
+
+        async function processRequest(request) {
+            loadingDiv.style.display = 'block';
+            suggestionDiv.style.display = 'none';
+
+            try {
+                const response = await fetch('https://impro-form.onrender.com/api/process-request', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ request: request })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    displaySuggestion(data.choices[0].message.content);
+                } else {
+                    throw new Error(data.error || 'An error occurred');
+                }
+            } catch (error) {
+                alert(`Error: ${error.message}`);
+            } finally {
+                loadingDiv.style.display = 'none';
+            }
+        }
+
+        function displaySuggestion(content) {
+            suggestionDiv.innerHTML = converter.makeHtml(content);
+            suggestionDiv.style.display = 'block';
+
+            const yesButton = document.createElement('button');
+            yesButton.textContent = 'Accept Suggestion';
+            yesButton.onclick = () => acceptSuggestion(content);
+
+            const noButton = document.createElement('button');
+            noButton.textContent = 'Reject Suggestion';
+            noButton.onclick = () => rejectSuggestion();
+
+            suggestionDiv.appendChild(yesButton);
+            suggestionDiv.appendChild(noButton);
+        }
+
+        function acceptSuggestion(content) {
+            // Extract the improved request from the LLM response
+            const improvedRequest = content.split('\n')[0].replace('Improved Request: ', '');
+            textarea.value = improvedRequest;
+            suggestionDiv.style.display = 'none';
+        }
+
+        function rejectSuggestion() {
+            processRequest(textarea.value); // Generate a new suggestion
+        }
+    </script>
+</body>
+
+</html>
