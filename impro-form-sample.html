@@ -23,6 +23,11 @@
         const userInput = document.getElementById('userInput');
         const conversation = document.getElementById('conversation');
 
+        // Define the base URL based on the current environment
+        const baseURL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://127.0.0.1:5000'
+            : 'https://impro-form.onrender.com';
+
         // Define axios config with headers
         const axiosConfig = {
             headers: {
@@ -44,14 +49,14 @@
                 let response;
                 if (!threadId) {
                     // Start a new conversation
-                    response = await axios.post('http://127.0.0.1:5000/api/start-conversation',
+                    response = await axios.post(`${baseURL}/api/start-conversation`,
                         { message: userMessage },
                         axiosConfig
                     );
                     threadId = response.data.thread_id;
                 } else {
                     // Send message to existing conversation
-                    response = await axios.post('http://127.0.0.1:5000/api/send-message',
+                    response = await axios.post(`${baseURL}/api/send-message`,
                         { thread_id: threadId, message: userMessage },
                         axiosConfig
                     );
