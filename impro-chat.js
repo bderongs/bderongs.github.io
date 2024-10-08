@@ -63,6 +63,19 @@
             border-radius: 10px;
             clear: both;
         }
+        .impro-message p {
+            margin: 0 0 10px 0;
+        }
+        .impro-message p:last-child {
+            margin-bottom: 0;
+        }
+        .impro-message a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .impro-message a:hover {
+            text-decoration: underline;
+        }
         .impro-user-message {
             background-color: #a8d2ff;
             color: #333;
@@ -79,23 +92,52 @@
             background-color: #f0f0f0;
         }
         .impro-chat-input input {
-            flex: 1;
+            flex: 4;
             padding: 10px;
             border: 1px solid #4a90e2;
             border-radius: 20px;
             margin-right: 10px;
         }
         .impro-chat-input button {
+            flex: 1;
             background-color: #4a90e2;
             color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 20px;
             cursor: pointer;
-            max-width: 150px;
+            white-space: nowrap;
         }
         .impro-chat-input button:hover {
             background-color: #3a7bc8;
+        }
+        .impro-chat-input input:disabled {
+            background-color: #e0e0e0;
+            cursor: not-allowed;
+        }
+        .impro-chat-input button:disabled {
+            background-color: #a0a0a0;
+            cursor: not-allowed;
+        }
+        .impro-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 24px;
+        }
+        .impro-loading-dot {
+            background-color: #fff;
+            border-radius: 50%;
+            width: 8px;
+            height: 8px;
+            margin: 0 4px;
+            animation: impro-loading 1.4s infinite ease-in-out both;
+        }
+        .impro-loading-dot:nth-child(1) { animation-delay: -0.32s; }
+        .impro-loading-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes impro-loading {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
         }
     `;
 
@@ -135,8 +177,8 @@
             // Show chat modal
             chatModal.style.display = 'block';
 
-            // Process the initial message
-            await processMessage(userMessage);
+            // Process the initial message without displaying it
+            await processMessage(userMessage, true);
         });
     }
 
@@ -145,11 +187,16 @@
         const userMessage = userInput.value.trim();
         if (!userMessage) return;
 
+        userInput.value = ''; // Clear input immediately
         await processMessage(userMessage);
     });
 
-    async function processMessage(userMessage) {
-        addMessageToConversation('User', userMessage);
+    async function processMessage(userMessage, isInitial = false) {
+        if (!isInitial) {
+            addMessageToConversation('User', userMessage);
+        }
+        const loadingIndicator = addLoadingIndicator();
+        setInputState(false); // Disable input
 
         try {
             let response;
@@ -166,22 +213,61 @@
                 );
             }
 
+            loadingIndicator.remove();
             addMessageToConversation('Assistant', response.data.response);
         } catch (error) {
             console.error('Error:', error);
+            loadingIndicator.remove();
             addMessageToConversation('Error', 'An error occurred while processing your request.');
+        } finally {
+            setInputState(true); // Re-enable input
         }
+    }
 
-        // Clear the input field
-        userInput.value = '';
+    function setInputState(enabled) {
+        userInput.disabled = !enabled;
+        chatForm.querySelector('button').disabled = !enabled;
     }
 
     function addMessageToConversation(sender, message) {
         const messageElement = document.createElement('div');
         messageElement.className = `impro-message impro-${sender.toLowerCase()}-message`;
-        messageElement.textContent = message;
+
+        if (sender === 'Assistant') {
+            messageElement.innerHTML = parseMarkdown(message);
+        } else {
+            messageElement.textContent = message;
+        }
+
         conversation.appendChild(messageElement);
         conversation.scrollTop = conversation.scrollHeight;
+    }
+
+    function parseMarkdown(text) {
+        // Convert line breaks
+        text = text.replace(/\n/g, '<br>');
+
+        // Convert bold text
+        text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+        // Convert italic text
+        text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+        // Convert links
+        text = text.replace(/\[([^\]]+)\]\(([^\)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+
+        // Wrap paragraphs
+        const paragraphs = text.split('<br><br>');
+        return paragraphs.map(p => `<p>${p}</p>`).join('');
+    }
+
+    function addLoadingIndicator() {
+        const loadingElement = document.createElement('div');
+        loadingElement.className = 'impro-message impro-assistant-message impro-loading';
+        loadingElement.innerHTML = '<div class="impro-loading-dot"></div><div class="impro-loading-dot"></div><div class="impro-loading-dot"></div>';
+        conversation.appendChild(loadingElement);
+        conversation.scrollTop = conversation.scrollHeight;
+        return loadingElement;
     }
 
     // Close the modal when clicking outside of it
