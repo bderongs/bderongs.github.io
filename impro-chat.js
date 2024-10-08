@@ -58,19 +58,19 @@
         }
         .impro-message {
             max-width: 70%;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
             padding: 10px;
             border-radius: 10px;
             clear: both;
         }
         .impro-user-message {
-            background-color: #4a90e2;
-            color: white;
+            background-color: #a8d2ff;
+            color: #333;
             float: right;
         }
         .impro-assistant-message {
-            background-color: white;
-            color: #333;
+            background-color: #4a90e2;
+            color: white;
             float: left;
         }
         .impro-chat-input {
@@ -92,6 +92,7 @@
             padding: 10px 20px;
             border-radius: 20px;
             cursor: pointer;
+            max-width: 150px;
         }
         .impro-chat-input button:hover {
             background-color: #3a7bc8;
@@ -177,7 +178,7 @@
 
     function addMessageToConversation(sender, message) {
         const messageElement = document.createElement('div');
-        messageElement.className = `message ${sender.toLowerCase()}-message`;
+        messageElement.className = `impro-message impro-${sender.toLowerCase()}-message`;
         messageElement.textContent = message;
         conversation.appendChild(messageElement);
         conversation.scrollTop = conversation.scrollHeight;
