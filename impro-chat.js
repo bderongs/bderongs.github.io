@@ -177,39 +177,55 @@
 
     let currentForm = null;
     let chatSummary = '';
+    let capturedEvents = [];
 
     function attachChatToForm(form) {
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            currentForm = form;
-            let userMessage = '';
+        const submitButton = form.querySelector('input[type="submit"], button[type="submit"]');
 
-            for (let element of form.elements) {
-                if ((element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') &&
-                    !element.hidden &&
-                    isVisible(element) &&
-                    element.type !== 'submit' &&
-                    element.type !== 'button') {
+        if (submitButton) {
+            // Capture and remove existing event listeners
+            const clonedButton = submitButton.cloneNode(true);
+            submitButton.parentNode.replaceChild(clonedButton, submitButton);
 
-                    let key = element.name || element.id;
-                    if (!key) {
-                        key = findLabelForElement(element);
-                    }
-                    const value = element.value;
-                    if (key && value) {
-                        userMessage += `${key}: ${value}\n`;
-                    }
+            // Attach our new submit handler
+            form.addEventListener('submit', handleSubmit);
+        } else {
+            // If no submit button found, just attach our handler to the form
+            form.addEventListener('submit', handleSubmit);
+        }
+    }
+
+    async function handleSubmit(e) {
+        e.preventDefault();
+        currentForm = e.target;
+
+        // Capture form data
+        let userMessage = '';
+        for (let element of currentForm.elements) {
+            if ((element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') &&
+                !element.hidden &&
+                isVisible(element) &&
+                element.type !== 'submit' &&
+                element.type !== 'button') {
+
+                let key = element.name || element.id;
+                if (!key) {
+                    key = findLabelForElement(element);
+                }
+                const value = element.value;
+                if (key && value) {
+                    userMessage += `${key}: ${value}\n`;
                 }
             }
+        }
 
-            chatSummary = userMessage; // Initialize chat summary with form data
+        chatSummary = userMessage; // Initialize chat summary with form data
 
-            // Show chat modal
-            chatModal.style.display = 'block';
+        // Show chat modal
+        chatModal.style.display = 'block';
 
-            // Process the initial message without displaying it
-            await processMessage(userMessage, true);
-        });
+        // Process the initial message without displaying it
+        await processMessage(userMessage, true);
     }
 
     function isVisible(element) {
@@ -366,8 +382,12 @@
             }
             summaryInput.value = chatSummary;
 
-            // Submit the form
-            currentForm.submit();
+            // Trigger the original submit event
+            const submitEvent = new Event('submit', {
+                bubbles: true,
+                cancelable: true
+            });
+            currentForm.dispatchEvent(submitEvent);
 
             // Reset variables
             currentForm = null;
