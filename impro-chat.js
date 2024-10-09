@@ -399,7 +399,12 @@
             if (originalSubmitFunction) {
                 originalSubmitFunction.call(currentForm);
             } else {
-                currentForm.submit();
+                const submitButton = currentForm.querySelector('input[type="submit"], button[type="submit"]');
+                if (submitButton) {
+                    submitButton.click();
+                } else {
+                    currentForm.submit();
+                }
             }
 
             // Reset variables
