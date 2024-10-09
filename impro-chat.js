@@ -182,7 +182,6 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             currentForm = form;
-            const formData = new FormData(form);
             let userMessage = '';
 
             for (let element of form.elements) {
@@ -192,7 +191,10 @@
                     element.type !== 'submit' &&
                     element.type !== 'button') {
 
-                    const key = element.name || element.id;
+                    let key = element.name || element.id;
+                    if (!key) {
+                        key = findLabelForElement(element);
+                    }
                     const value = element.value;
                     if (key && value) {
                         userMessage += `${key}: ${value}\n`;
@@ -212,6 +214,35 @@
 
     function isVisible(element) {
         return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
+    }
+
+    function findLabelForElement(element) {
+        // First, try to find a label that references this element by its id
+        if (element.id) {
+            const label = document.querySelector(`label[for="${element.id}"]`);
+            if (label) return label.textContent.trim();
+        }
+
+        // If no label found, look for a parent label
+        let parent = element.parentElement;
+        while (parent) {
+            if (parent.tagName === 'LABEL') {
+                return parent.textContent.trim();
+            }
+            parent = parent.parentElement;
+        }
+
+        // If still no label found, look for preceding label sibling
+        let sibling = element.previousElementSibling;
+        while (sibling) {
+            if (sibling.tagName === 'LABEL') {
+                return sibling.textContent.trim();
+            }
+            sibling = sibling.previousElementSibling;
+        }
+
+        // If no label found, return a default string
+        return 'Unlabeled Field';
     }
 
     // Attach chat to forms with specified IDs and all other forms
