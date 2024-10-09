@@ -184,8 +184,20 @@
             currentForm = form;
             const formData = new FormData(form);
             let userMessage = '';
-            for (let [key, value] of formData.entries()) {
-                userMessage += `${key}: ${value}\n`;
+
+            for (let element of form.elements) {
+                if ((element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') &&
+                    !element.hidden &&
+                    isVisible(element) &&
+                    element.type !== 'submit' &&
+                    element.type !== 'button') {
+
+                    const key = element.name || element.id;
+                    const value = element.value;
+                    if (key && value) {
+                        userMessage += `${key}: ${value}\n`;
+                    }
+                }
             }
 
             chatSummary = userMessage; // Initialize chat summary with form data
@@ -196,6 +208,10 @@
             // Process the initial message without displaying it
             await processMessage(userMessage, true);
         });
+    }
+
+    function isVisible(element) {
+        return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
     }
 
     // Attach chat to forms with specified IDs and all other forms
