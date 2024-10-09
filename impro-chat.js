@@ -139,6 +139,16 @@
             0%, 80%, 100% { transform: scale(0); }
             40% { transform: scale(1); }
         }
+        .impro-close-button {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
     `;
 
     // Inject chat modal and styles
@@ -165,14 +175,20 @@
         withCredentials: false
     };
 
+    let currentForm = null;
+    let chatSummary = '';
+
     function attachChatToForm(form) {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
+            currentForm = form;
             const formData = new FormData(form);
             let userMessage = '';
             for (let [key, value] of formData.entries()) {
                 userMessage += `${key}: ${value}\n`;
             }
+
+            chatSummary = userMessage; // Initialize chat summary with form data
 
             // Show chat modal
             chatModal.style.display = 'block';
@@ -188,8 +204,6 @@
     const allForms = Array.from(document.getElementsByTagName('form'));
 
     const formsToAttach = new Set([...specificForms, ...allForms]);
-    console.log("Attaching to forms: ");
-    console.log(formsToAttach);
 
     formsToAttach.forEach(form => {
         attachChatToForm(form);
@@ -207,6 +221,7 @@
     async function processMessage(userMessage, isInitial = false) {
         if (!isInitial) {
             addMessageToConversation('User', userMessage);
+            chatSummary += `\nUser: ${userMessage}`; // Add user message to summary
         }
         const loadingIndicator = addLoadingIndicator();
         setInputState(false); // Disable input
@@ -228,6 +243,7 @@
 
             loadingIndicator.remove();
             addMessageToConversation('Assistant', response.data.response);
+            chatSummary += `\nAssistant: ${response.data.response}`; // Add assistant response to summary
         } catch (error) {
             console.error('Error:', error);
             loadingIndicator.remove();
@@ -286,7 +302,37 @@
     // Close the modal when clicking outside of it
     window.onclick = function (event) {
         if (event.target == chatModal) {
-            chatModal.style.display = "none";
+            closeChatAndSubmitForm();
         }
     }
+
+    function closeChatAndSubmitForm() {
+        chatModal.style.display = "none";
+        if (currentForm) {
+            // Find or create a hidden input for the chat summary
+            let summaryInput = currentForm.querySelector('input[name="chat_summary"]');
+            if (!summaryInput) {
+                summaryInput = document.createElement('input');
+                summaryInput.type = 'hidden';
+                summaryInput.name = 'chat_summary';
+                currentForm.appendChild(summaryInput);
+            }
+            summaryInput.value = chatSummary;
+
+            // Submit the form
+            currentForm.submit();
+
+            // Reset variables
+            currentForm = null;
+            chatSummary = '';
+            threadId = null;
+        }
+    }
+
+    // Add a close button to the chat modal
+    const closeButton = document.createElement('button');
+    closeButton.textContent = 'Close';
+    closeButton.className = 'impro-close-button';
+    closeButton.onclick = closeChatAndSubmitForm;
+    document.querySelector('.impro-chat-header').appendChild(closeButton);
 })();
