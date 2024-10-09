@@ -177,27 +177,34 @@
 
     let currentForm = null;
     let chatSummary = '';
-    let capturedEvents = [];
+    let originalSubmitFunction = null;
 
     function attachChatToForm(form) {
+        // Store the original onsubmit function if it exists
+        originalSubmitFunction = form.onsubmit;
+
+        // Override the onsubmit property
+        form.onsubmit = handleSubmit;
+
+        // Also attach to the submit event to catch jQuery or other listeners
+        form.addEventListener('submit', handleSubmit);
+
+        // Find the submit button and prevent its click event from bubbling
         const submitButton = form.querySelector('input[type="submit"], button[type="submit"]');
-
         if (submitButton) {
-            // Capture and remove existing event listeners
-            const clonedButton = submitButton.cloneNode(true);
-            submitButton.parentNode.replaceChild(clonedButton, submitButton);
-
-            // Attach our new submit handler
-            form.addEventListener('submit', handleSubmit);
-        } else {
-            // If no submit button found, just attach our handler to the form
-            form.addEventListener('submit', handleSubmit);
+            submitButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleSubmit(e);
+            });
         }
     }
 
     async function handleSubmit(e) {
         e.preventDefault();
-        currentForm = e.target;
+        e.stopPropagation();
+
+        currentForm = e.target.closest('form') || e.target;
 
         // Capture form data
         let userMessage = '';
@@ -226,6 +233,8 @@
 
         // Process the initial message without displaying it
         await processMessage(userMessage, true);
+
+        return false; // Prevent form submission
     }
 
     function isVisible(element) {
@@ -382,12 +391,16 @@
             }
             summaryInput.value = chatSummary;
 
-            // Trigger the original submit event
-            const submitEvent = new Event('submit', {
-                bubbles: true,
-                cancelable: true
-            });
-            currentForm.dispatchEvent(submitEvent);
+            // Remove our event listeners
+            currentForm.onsubmit = originalSubmitFunction;
+            currentForm.removeEventListener('submit', handleSubmit);
+
+            // Submit the form
+            if (originalSubmitFunction) {
+                originalSubmitFunction.call(currentForm);
+            } else {
+                currentForm.submit();
+            }
 
             // Reset variables
             currentForm = null;
