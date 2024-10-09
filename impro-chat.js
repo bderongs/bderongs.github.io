@@ -182,6 +182,19 @@
         });
     }
 
+    // Attach chat to forms with specified IDs and all other forms
+    const formIds = ['initialForm', 'contactForm', 'contact'];
+    const specificForms = formIds.map(id => document.getElementById(id)).filter(form => form);
+    const allForms = Array.from(document.getElementsByTagName('form'));
+
+    const formsToAttach = new Set([...specificForms, ...allForms]);
+    console.log("Attaching to forms: ");
+    console.log(formsToAttach);
+
+    formsToAttach.forEach(form => {
+        attachChatToForm(form);
+    });
+
     chatForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const userMessage = userInput.value.trim();
@@ -276,13 +289,4 @@
             chatModal.style.display = "none";
         }
     }
-
-    // Attach chat to form with specified IDs
-    const formIds = ['initialForm', 'contactForm', 'contact'];
-    formIds.forEach(id => {
-        const form = document.getElementById(id);
-        if (form) {
-            attachChatToForm(form);
-        }
-    });
 })();
