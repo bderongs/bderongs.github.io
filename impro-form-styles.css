@@ -12,12 +12,9 @@
 
 .impro-industry-selector {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
     width: 600px;
     max-width: 100%;
-    padding: 20px;
-    background-color: #e0e6ed;
     margin-bottom: 40px;
     box-sizing: border-box;
 }
