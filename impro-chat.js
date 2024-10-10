@@ -9,8 +9,8 @@
                 </div>
                 <div id="improConversation" class="impro-chat-messages"></div>
                 <form id="improChatForm" class="impro-chat-input">
-                    <input type="text" id="improUserInput" placeholder="Type your message here..." autocomplete="off">
-                    <button type="submit">Send</button>
+                    <input type="text" id="improUserInput" placeholder="Entrez votre message..." autocomplete="off">
+                    <button type="submit">Envoyer</button>
                 </form>
             </div>
         </div>
