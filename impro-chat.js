@@ -30,10 +30,7 @@
             background-color: rgba(0,0,0,0.4);
         }
         .impro-chat-container {
-            background-color: #fefefe;
             margin: 10% auto;
-            padding: 20px;
-            border: 1px solid #888;
             width: 80%;
             max-width: 600px;
             height: 70%;
