@@ -1,0 +1,186 @@
+.impro-form-container {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #f0f4f8;
+    padding: 20px 0;
+}
+
+.impro-industry-selector {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 20px 0;
+    background-color: #e0e6ed;
+    margin-bottom: 40px;
+}
+
+.impro-industry-box {
+    padding: 15px 30px;
+    margin: 0 10px;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.impro-industry-box:hover {
+    transform: translateY(-5px);
+}
+
+#impro-web-agency {
+    background-color: #4a90e2;
+    color: white;
+}
+
+#impro-mover {
+    background-color: #f39c12;
+    color: white;
+}
+
+#impro-construction {
+    background-color: #27ae60;
+    color: white;
+}
+
+#impro-consultant {
+    background-color: #8e44ad;
+    color: white;
+}
+
+.impro-form-wrapper {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 600px;
+    max-width: 95%;
+}
+
+.impro-form-wrapper h1 {
+    text-align: center;
+    color: #4a90e2;
+    margin-bottom: 10px;
+    font-size: 28px;
+}
+
+.impro-industry-message {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 18px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.impro-form-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.impro-form-group {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.impro-form-group:last-child {
+    margin-right: 0;
+}
+
+.impro-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+.impro-form-group input[type="text"],
+.impro-form-group input[type="email"],
+.impro-form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.impro-form-group input[type="text"]:focus,
+.impro-form-group input[type="email"]:focus,
+.impro-form-group textarea:focus {
+    border-color: #4a90e2;
+    outline: none;
+}
+
+.impro-form-group textarea {
+    height: 150px;
+    resize: vertical;
+}
+
+.impro-form-wrapper button {
+    width: 100%;
+    padding: 12px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s;
+}
+
+.impro-form-wrapper button:hover {
+    background-color: #3a7bc8;
+}
+
+@media (max-width: 768px) {
+    .impro-industry-selector {
+        flex-wrap: wrap;
+        padding: 10px;
+        justify-content: space-around;
+    }
+
+    .impro-industry-box {
+        flex: 0 0 calc(50% - 10px);
+        margin: 5px 0;
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .impro-form-wrapper {
+        padding: 20px;
+        width: 90%;
+        max-width: 400px;
+    }
+
+    .impro-form-wrapper h1 {
+        font-size: 24px;
+    }
+
+    .impro-industry-message {
+        font-size: 16px;
+    }
+
+    .impro-form-row {
+        flex-direction: column;
+    }
+
+    .impro-form-group {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .impro-form-group input[type="text"],
+    .impro-form-group input[type="email"],
+    .impro-form-group textarea {
+        font-size: 14px;
+    }
+
+    .impro-form-wrapper button {
+        font-size: 16px;
+    }
+}
