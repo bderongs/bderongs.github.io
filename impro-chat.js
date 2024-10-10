@@ -180,23 +180,26 @@
     let originalSubmitFunction = null;
 
     function attachChatToForm(form) {
-        // Store the original onsubmit function if it exists
-        originalSubmitFunction = form.onsubmit;
+        // Only attach to forms that are not the chat form
+        if (form.id !== 'improChatForm') {
+            // Store the original onsubmit function if it exists
+            originalSubmitFunction = form.onsubmit;
 
-        // Override the onsubmit property
-        form.onsubmit = handleSubmit;
+            // Override the onsubmit property
+            form.onsubmit = handleSubmit;
 
-        // Also attach to the submit event to catch jQuery or other listeners
-        form.addEventListener('submit', handleSubmit);
+            // Also attach to the submit event to catch jQuery or other listeners
+            form.addEventListener('submit', handleSubmit);
 
-        // Find the submit button and prevent its click event from bubbling
-        const submitButton = form.querySelector('input[type="submit"], button[type="submit"]');
-        if (submitButton) {
-            submitButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleSubmit(e);
-            });
+            // Find the submit button and prevent its click event from bubbling
+            const submitButton = form.querySelector('input[type="submit"], button[type="submit"]');
+            if (submitButton) {
+                submitButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleSubmit(e);
+                });
+            }
         }
     }
 
@@ -270,10 +273,10 @@
         return 'Unlabeled Field';
     }
 
-    // Attach chat to forms with specified IDs and all other forms
+    // Attach chat to forms with specified IDs and all other forms except the chat form
     const formIds = ['initialForm', 'contactForm', 'contact'];
     const specificForms = formIds.map(id => document.getElementById(id)).filter(form => form);
-    const allForms = Array.from(document.getElementsByTagName('form'));
+    const allForms = Array.from(document.getElementsByTagName('form')).filter(form => form.id !== 'improChatForm');
 
     const formsToAttach = new Set([...specificForms, ...allForms]);
 
