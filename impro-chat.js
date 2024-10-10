@@ -5,7 +5,7 @@
         <div id="improChatModal" class="impro-modal">
             <div class="impro-chat-container">
                 <div class="impro-chat-header">
-                    <h1>Impro Chat</h1>
+                    <h1>Précisons votre demande</h1>
                 </div>
                 <div id="improConversation" class="impro-chat-messages"></div>
                 <form id="improChatForm" class="impro-chat-input">
