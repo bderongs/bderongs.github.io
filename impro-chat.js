@@ -284,31 +284,49 @@
         attachChatToForm(form);
     });
 
+    let isSubmitting = false;
+    let debounceTimer;
+
+    function debounce(func, delay) {
+        return function () {
+            const context = this;
+            const args = arguments;
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => func.apply(context, args), delay);
+        };
+    }
+
+    const debouncedProcessMessage = debounce(processMessage, 300);
+
     chatForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        e.stopPropagation(); // Stop event from bubbling up
+        e.stopPropagation();
+
+        if (isSubmitting) return;
 
         const userMessage = userInput.value.trim();
         if (!userMessage) return;
 
-        // Disable the submit button to prevent double submission
+        isSubmitting = true;
         const submitButton = chatForm.querySelector('button[type="submit"]');
         submitButton.disabled = true;
 
-        userInput.value = ''; // Clear input immediately
-        await processMessage(userMessage);
-
-        // Re-enable the submit button after processing
-        submitButton.disabled = false;
+        userInput.value = '';
+        try {
+            await debouncedProcessMessage(userMessage);
+        } finally {
+            isSubmitting = false;
+            submitButton.disabled = false;
+        }
     });
 
     async function processMessage(userMessage, isInitial = false) {
         if (!isInitial) {
             addMessageToConversation('User', userMessage);
-            chatSummary += `\nUser: ${userMessage}`; // Add user message to summary
+            chatSummary += `\nUser: ${userMessage}`;
         }
         const loadingIndicator = addLoadingIndicator();
-        setInputState(false); // Disable input
+        setInputState(false);
 
         try {
             let response;
@@ -327,13 +345,13 @@
 
             loadingIndicator.remove();
             addMessageToConversation('Assistant', response.data.response);
-            chatSummary += `\nAssistant: ${response.data.response}`; // Add assistant response to summary
+            chatSummary += `\nAssistant: ${response.data.response}`;
         } catch (error) {
             console.error('Error:', error);
             loadingIndicator.remove();
             addMessageToConversation('Error', 'An error occurred while processing your request.');
         } finally {
-            setInputState(true); // Re-enable input
+            setInputState(true);
         }
     }
 
