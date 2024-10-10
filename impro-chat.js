@@ -371,13 +371,6 @@
         return loadingElement;
     }
 
-    // Close the modal when clicking outside of it
-    window.onclick = function (event) {
-        if (event.target == chatModal) {
-            closeChatAndSubmitForm();
-        }
-    }
-
     function closeChatAndSubmitForm() {
         chatModal.style.display = "none";
         if (currentForm) {
@@ -395,22 +388,17 @@
             currentForm.onsubmit = originalSubmitFunction;
             currentForm.removeEventListener('submit', handleSubmit);
 
-            // Submit the form
-            if (originalSubmitFunction) {
-                originalSubmitFunction.call(currentForm);
-            } else {
-                const submitButton = currentForm.querySelector('input[type="submit"], button[type="submit"]');
-                if (submitButton) {
-                    submitButton.click();
-                } else {
-                    currentForm.submit();
-                }
-            }
-
             // Reset variables
             currentForm = null;
             chatSummary = '';
             threadId = null;
+        }
+    }
+
+    // Close the modal when clicking outside of it
+    window.onclick = function (event) {
+        if (event.target == chatModal) {
+            closeChatAndSubmitForm();
         }
     }
 
