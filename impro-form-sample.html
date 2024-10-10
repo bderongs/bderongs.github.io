@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us</title>
+    <title>Contactez-nous</title>
     <style>
         body,
         html {
@@ -14,97 +14,237 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #f0f0f0;
+            background-color: #f0f4f8;
         }
 
         .container {
             background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 80%;
-            max-width: 500px;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 95%;
+            max-width: 1200px;
         }
 
         h1 {
             text-align: center;
-            color: #075e54;
-            margin-bottom: 20px;
+            color: #4a90e2;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .industry-selector {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .industry-box {
+            flex: 1;
+            padding: 15px;
+            margin: 0 10px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .industry-box:hover {
+            transform: translateY(-5px);
+        }
+
+        #web-agency {
+            background-color: #4a90e2;
+            color: white;
+        }
+
+        #mover {
+            background-color: #f39c12;
+            color: white;
+        }
+
+        #construction {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        #consultant {
+            background-color: #8e44ad;
+            color: white;
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            flex: 1;
+            margin-right: 20px;
+        }
+
+        .form-group:last-child {
+            margin-right: 0;
         }
 
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-weight: bold;
+            color: #333;
         }
 
         input[type="text"],
         input[type="email"],
         textarea {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
             box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        textarea:focus {
+            border-color: #4a90e2;
+            outline: none;
         }
 
         textarea {
-            height: 100px;
+            height: 150px;
             resize: vertical;
         }
 
         button {
             width: 100%;
-            padding: 10px;
-            background-color: #075e54;
+            padding: 12px;
+            background-color: #4a90e2;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px;
+            transition: background-color 0.3s;
         }
 
         button:hover {
-            background-color: #064c44;
+            background-color: #3a7bc8;
+        }
+
+        @media (max-width: 768px) {
+
+            .form-row,
+            .industry-selector {
+                flex-direction: column;
+            }
+
+            .form-group,
+            .industry-box {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>Contact Us</h1>
+        <h1>Contactez-nous</h1>
+        <div class="industry-selector">
+            <div class="industry-box" id="web-agency">Agence web</div>
+            <div class="industry-box" id="mover">Déménageur</div>
+            <div class="industry-box" id="construction">Travaux</div>
+            <div class="industry-box" id="consultant">Consultant</div>
+        </div>
         <form id="contactForm">
-            <div class="form-group">
-                <label for="firstName">First Name</label>
-                <input type="text" id="firstName" name="firstName" required>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">Prénom</label>
+                    <input type="text" id="firstName" name="firstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Nom</label>
+                    <input type="text" id="lastName" name="lastName" required>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="lastName">Last Name</label>
-                <input type="text" id="lastName" name="lastName" required>
-            </div>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div class="form-group">
-                <label for="company">Company</label>
-                <input type="text" id="company" name="company">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="company">Entreprise</label>
+                    <input type="text" id="company" name="company">
+                </div>
             </div>
             <div class="form-group">
                 <label for="message">Message</label>
                 <textarea id="message" name="message" required></textarea>
             </div>
-            <button type="submit">Send Message</button>
+            <button type="submit">Envoyer le message</button>
         </form>
     </div>
 
     <!-- Include the external chat script -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="impro-chat.js"></script>
+
+    <script>
+        const industryData = {
+            'web-agency': {
+                color: '#4a90e2',
+                firstName: 'Sophie',
+                lastName: 'Martin',
+                email: 'sophie.martin@entreprise.fr',
+                company: 'E-Commerce Plus',
+                message: 'Bonjour, je souhaiterais obtenir un devis pour la création d\'un site e-commerce pour ma boutique de vêtements. Pouvez-vous me donner plus d\'informations sur vos services et tarifs ?'
+            },
+            'mover': {
+                color: '#f39c12',
+                firstName: 'Thomas',
+                lastName: 'Dubois',
+                email: 'thomas.dubois@gmail.com',
+                company: '',
+                message: 'Bonjour, je déménage de Lyon à Paris le mois prochain et j\'aurais besoin d\'un service de déménagement complet. Pouvez-vous me faire un devis pour un appartement de 3 pièces ?'
+            },
+            'construction': {
+                color: '#27ae60',
+                firstName: 'Marie',
+                lastName: 'Leroy',
+                email: 'marie.leroy@outlook.fr',
+                company: '',
+                message: 'Bonjour, je souhaite rénover ma salle de bain et ma cuisine. Pouvez-vous me donner une estimation du coût et du temps nécessaire pour ces travaux ?'
+            },
+            'consultant': {
+                color: '#8e44ad',
+                firstName: 'Pierre',
+                lastName: 'Moreau',
+                email: 'p.moreau@entreprise-conseil.fr',
+                company: 'Entreprise Conseil',
+                message: 'Bonjour, notre entreprise cherche un consultant en stratégie digitale pour nous aider à développer notre présence en ligne. Pouvez-vous nous présenter vos services et votre expérience dans ce domaine ?'
+            }
+        };
+
+        document.querySelectorAll('.industry-box').forEach(box => {
+            box.addEventListener('click', () => {
+                const industry = box.id;
+                const data = industryData[industry];
+
+                document.getElementById('firstName').value = data.firstName;
+                document.getElementById('lastName').value = data.lastName;
+                document.getElementById('email').value = data.email;
+                document.getElementById('company').value = data.company;
+                document.getElementById('message').value = data.message;
+
+                document.querySelector('button[type="submit"]').style.backgroundColor = data.color;
+                document.querySelector('h1').style.color = data.color;
+            });
+        });
+    </script>
 </body>
 
 </html>
