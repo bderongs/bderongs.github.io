@@ -2,13 +2,11 @@
     font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
     align-items: center;
     background-color: #f0f4f8;
     padding: 20px 0;
     width: 100%;
     max-width: 800px;
-    /* Adjust this value as needed */
     margin: 0 auto;
 }
 
@@ -59,8 +57,10 @@
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 100%;
+    width: 600px;
+    max-width: 100%;
     box-sizing: border-box;
+    overflow: hidden;
 }
 
 .impro-form-wrapper h1 {
@@ -77,6 +77,7 @@
     font-size: 18px;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    max-width: 100%;
 }
 
 .impro-form-row {
@@ -161,6 +162,7 @@
 
     .impro-form-wrapper {
         padding: 20px;
+        width: 100%;
     }
 
     .impro-form-wrapper h1 {
