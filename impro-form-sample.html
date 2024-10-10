@@ -152,16 +152,46 @@
         }
 
         @media (max-width: 768px) {
-
-            .form-row,
             .industry-selector {
+                flex-wrap: wrap;
+            }
+
+            .industry-box {
+                flex: 1 0 40%;
+                margin: 5px;
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .industry-message {
+                font-size: 16px;
+            }
+
+            .form-row {
                 flex-direction: column;
             }
 
-            .form-group,
-            .industry-box {
+            .form-group {
                 margin-right: 0;
                 margin-bottom: 20px;
+            }
+
+            input[type="text"],
+            input[type="email"],
+            textarea {
+                font-size: 14px;
+            }
+
+            button {
+                font-size: 16px;
             }
         }
     </style>
