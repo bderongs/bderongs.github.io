@@ -283,11 +283,20 @@
 
     chatForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        e.stopPropagation(); // Stop event from bubbling up
+
         const userMessage = userInput.value.trim();
         if (!userMessage) return;
 
+        // Disable the submit button to prevent double submission
+        const submitButton = chatForm.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+
         userInput.value = ''; // Clear input immediately
         await processMessage(userMessage);
+
+        // Re-enable the submit button after processing
+        submitButton.disabled = false;
     });
 
     async function processMessage(userMessage, isInitial = false) {
