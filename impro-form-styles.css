@@ -11,23 +11,26 @@
 }
 
 .impro-industry-selector {
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
     width: 600px;
     max-width: 100%;
-    padding: 20px 0;
+    padding: 20px;
     background-color: #e0e6ed;
     margin-bottom: 40px;
     box-sizing: border-box;
 }
 
 .impro-industry-box {
-    padding: 15px 30px;
-    margin: 0 10px;
+    padding: 15px 10px;
     text-align: center;
     border-radius: 5px;
     cursor: pointer;
     transition: all 0.3s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .impro-industry-box:hover {
@@ -150,16 +153,13 @@
     }
 
     .impro-industry-selector {
-        flex-wrap: wrap;
+        grid-template-columns: 1fr;
+        width: 100%;
         padding: 10px;
-        justify-content: space-around;
     }
 
     .impro-industry-box {
-        flex: 0 0 calc(50% - 10px);
-        margin: 5px 0;
         padding: 10px;
-        font-size: 14px;
     }
 
     .impro-form-wrapper {
