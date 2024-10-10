@@ -12,9 +12,11 @@
 
 .impro-industry-selector {
     display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
     width: 600px;
     max-width: 100%;
+    padding: 20px;
     margin-bottom: 40px;
     box-sizing: border-box;
 }

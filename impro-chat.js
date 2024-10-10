@@ -1,4 +1,5 @@
 (function () {
+    console.log('Chat script loaded at:', new Date().toISOString());
     // Chat modal HTML with a unique ID
     const chatModalHTML = `
         <div id="improChatModal" class="impro-modal">
