@@ -327,8 +327,13 @@
             let response;
             console.log('Sending request. ThreadId:', threadId);
             if (!threadId) {
+                // Get the selected industry
+                const selectedIndustry = document.querySelector('.impro-industry-box.selected').id.replace('impro-', '');
                 response = await axios.post(`${baseURL}/api/start-conversation`,
-                    { message: userMessage },
+                    {
+                        message: userMessage,
+                        industry: selectedIndustry
+                    },
                     axiosConfig
                 );
                 threadId = response.data.thread_id;
