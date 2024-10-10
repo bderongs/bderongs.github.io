@@ -284,38 +284,32 @@
         attachChatToForm(form);
     });
 
-    let isSubmitting = false;
-    let debounceTimer;
-
-    function debounce(func, delay) {
-        return function () {
-            const context = this;
-            const args = arguments;
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(() => func.apply(context, args), delay);
-        };
-    }
-
-    const debouncedProcessMessage = debounce(processMessage, 300);
+    let isProcessing = false;
 
     chatForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         e.stopPropagation();
 
-        if (isSubmitting) return;
+        if (isProcessing) {
+            console.log('A request is already in progress. Ignoring this submission.');
+            return;
+        }
 
         const userMessage = userInput.value.trim();
         if (!userMessage) return;
 
-        isSubmitting = true;
+        isProcessing = true;
         const submitButton = chatForm.querySelector('button[type="submit"]');
         submitButton.disabled = true;
 
         userInput.value = '';
+
         try {
-            await debouncedProcessMessage(userMessage);
+            await processMessage(userMessage);
+        } catch (error) {
+            console.error('Error processing message:', error);
         } finally {
-            isSubmitting = false;
+            isProcessing = false;
             submitButton.disabled = false;
         }
     });
@@ -330,12 +324,14 @@
 
         try {
             let response;
+            console.log('Sending request. ThreadId:', threadId);
             if (!threadId) {
                 response = await axios.post(`${baseURL}/api/start-conversation`,
                     { message: userMessage },
                     axiosConfig
                 );
                 threadId = response.data.thread_id;
+                console.log('New thread created:', threadId);
             } else {
                 response = await axios.post(`${baseURL}/api/send-message`,
                     { thread_id: threadId, message: userMessage },
