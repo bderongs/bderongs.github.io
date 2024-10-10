@@ -33,7 +33,7 @@
             margin: 10% auto;
             width: 80%;
             max-width: 600px;
-            height: 70%;
+            height: 80%;
             display: flex;
             flex-direction: column;
             font-family: Arial, sans-serif;
