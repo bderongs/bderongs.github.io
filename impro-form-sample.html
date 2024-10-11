@@ -91,6 +91,12 @@
 
             document.querySelectorAll('.impro-industry-box').forEach(box => {
                 box.addEventListener('click', () => {
+                    // Remove 'selected' class from all boxes
+                    document.querySelectorAll('.impro-industry-box').forEach(b => b.classList.remove('selected'));
+
+                    // Add 'selected' class to the clicked box
+                    box.classList.add('selected');
+
                     const industry = box.id;
                     const data = improIndustryData[industry];
 
