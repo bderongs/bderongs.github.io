@@ -1,4 +1,8 @@
 
+#impro-form-container{
+    flex-grow: 1;
+}
+
 .impro-form-container {
     flex-grow: 1;
     font-family: Arial, sans-serif;
@@ -149,6 +153,9 @@
 }
 
 @media (max-width: 768px) {
+    #impro-form-container{
+        flex-grow: 1;
+    }
     .impro-form-container {
         flex-grow: 1;
         padding: 10px;
